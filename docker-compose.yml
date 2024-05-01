@@ -166,7 +166,7 @@ services:
 
   # GPT Academic
   gptacademic:
-    image: ghcr.io/binary-husky/gpt_academic_nolocal:master
+    image: ghcr.nju.edu.cn/binary-husky/gpt_academic_nolocal:master
     command: >
       bash -c "python3 -u main.py"
     networks: [network_cluster]
