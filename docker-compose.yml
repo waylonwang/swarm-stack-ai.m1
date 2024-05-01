@@ -81,7 +81,7 @@ services:
 
   # FastGPT
   fastgpt:
-    image: ghcr.io/labring/fastgpt:latest
+    image: ghcr.nju.edu.cn/labring/fastgpt:latest
     networks: [network_cluster]
     restart: on-failure
     environment:
