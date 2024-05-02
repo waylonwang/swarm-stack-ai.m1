@@ -10,10 +10,7 @@ services:
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
-      http_proxy: ${OPENCLASH_HTTP_PROXY}
-      https_proxy: ${OPENCLASH_HTTP_PROXY}
-      HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}      
+      PROXY: ${OPENCLASH_HTTP_PROXY}        
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config1:/config
@@ -39,10 +36,7 @@ services:
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
-      http_proxy: ${OPENCLASH_HTTP_PROXY}
-      https_proxy: ${OPENCLASH_HTTP_PROXY}
-      HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}      
+      PROXY: ${OPENCLASH_HTTP_PROXY}         
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config2:/config
@@ -68,10 +62,7 @@ services:
     restart: on-failure
     environment:
       # 直接使用Portainer容器内的环境变量
-      http_proxy: ${OPENCLASH_HTTP_PROXY}
-      https_proxy: ${OPENCLASH_HTTP_PROXY}
-      HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}      
+      PROXY: ${OPENCLASH_HTTP_PROXY}    
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config3:/config
