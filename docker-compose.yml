@@ -124,6 +124,11 @@ services:
         constraints:
           - node.labels.type == vm
           - node.labels.ai == true
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.fastgpt
+        fluentd-async-connect: "true"  
 
   # One API
   oneapi:
