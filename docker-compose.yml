@@ -6,9 +6,18 @@ x-defines:
   service-common: &service-common-ref
     networks: [network_cluster]
     restart: on-failure
+  env-common: &env-common-ref
+    NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1}
+    TZ: ${TZ:-Asia/Shanghai}    
+  env-proxy: &env-proxy-ref
+    HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
+    HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
   deploy-common: &deploy-common-ref
     mode: replicated
     replicas: 1
+    restart_policy:
+      condition: on-failure
+      delay: 5s      
   placement-default: &placement-default-ref
     placement:
       constraints:
@@ -23,13 +32,12 @@ services:
   # Xiaoai GPT
   # ------------------------------------------------------------
   xiaogpt1:
+    <<: *service-common-ref
     image: yihong0618/xiaogpt
     command: --config=/config/config.json
-    <<: *service-common-ref
     environment:
-      # 直接使用Portainer容器内的环境变量
+      <<: [*env-common-ref, *env-proxy-ref]
       PROXY: ${OPENCLASH_HTTP_PROXY}
-      TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config1:/config
       - nfs_xiaogpt_src:/app/xiaogpt
@@ -48,13 +56,12 @@ services:
         - homepage.weight=20
       <<: [*deploy-common-ref, *placement-default-ref]
   xiaogpt2:
+    <<: *service-common-ref
     image: yihong0618/xiaogpt
     command: --config=/config/config.json
-    <<: *service-common-ref
     environment:
-      # 直接使用Portainer容器内的环境变量
+      <<: [*env-common-ref, *env-proxy-ref]
       PROXY: ${OPENCLASH_HTTP_PROXY}
-      TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config2:/config
       - nfs_xiaogpt_src:/app/xiaogpt
@@ -73,13 +80,12 @@ services:
         - homepage.weight=21
       <<: [*deploy-common-ref, *placement-default-ref]
   xiaogpt3:
+    <<: *service-common-ref
     image: yihong0618/xiaogpt
     command: --config=/config/config.json
-    <<: *service-common-ref
     environment:
-      # 直接使用Portainer容器内的环境变量
+      <<: [*env-common-ref, *env-proxy-ref]
       PROXY: ${OPENCLASH_HTTP_PROXY}
-      TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config3:/config
       - nfs_xiaogpt_src:/app/xiaogpt
@@ -102,10 +108,10 @@ services:
   # FastGPT
   # ------------------------------------------------------------
   fastgpt:
-    image: ghcr.nju.edu.cn/labring/fastgpt:latest
     <<: *service-common-ref
+    image: ghcr.nju.edu.cn/labring/fastgpt:latest
     environment:
-      # 直接使用Portainer容器内的环境变量
+      <<: [*env-common-ref, *env-proxy-ref]
       DEFAULT_ROOT_PSW: ${FASTGPT_DEFAULT_ROOT_PSW}
       OPENAI_BASE_URL: ${FASTGPT_OPENAI_BASE_URL}
       CHAT_API_KEY: ${FASTGPT_CHAT_API_KEY}
@@ -117,7 +123,6 @@ services:
       PG_URL: ${FASTGPT_PG_URL}
       AXIOS_PROXY_HOST: ${FASTGPT_AXIOS_PROXY_HOST}
       AXIOS_PROXY_PORT: ${FASTGPT_AXIOS_PROXY_PORT}
-      TZ: ${TZ}
     # volumes:
     #   - nfs_fastgpt_config:/app/data
     logging:
@@ -146,20 +151,15 @@ services:
   # One API
   # ------------------------------------------------------------
   oneapi:
+    <<: *service-common-ref
     image: justsong/one-api:latest
     command: --log-dir /app/logs
-    <<: *service-common-ref
     environment:
-      # 直接使用Portainer容器内的环境变量
+      <<: [*env-common-ref, *env-proxy-ref]
       # SQL_DSN: ${ONEAPI_SQL_DSN}  # 修改此行，或注释掉以使用 SQLite 作为数据库
       REDIS_CONN_STRING: ${ONEAPI_REDIS_CONN_STRING}
       SYNC_FREQUENCY: 60
       SESSION_SECRET: ${ONEAPI_SESSION_SECRET}
-      HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
-      # http_proxy: ${CLASH_HTTP_PROXY}
-      # https_proxy: ${CLASH_HTTP_PROXY}
-      TZ: ${TZ}
     volumes:
       - nfs_oneapi_data:/data
       - nfs_oneapi_log:/app/logs
@@ -189,12 +189,12 @@ services:
   # GPT Academic
   # ------------------------------------------------------------
   gptacademic:
+    <<: *service-common-ref
     image: ghcr.nju.edu.cn/binary-husky/gpt_academic_nolocal:master
     command: >
       bash -c "python3 -u main.py"
-    <<: *service-common-ref
     environment:
-      # 直接使用Portainer容器内的环境变量
+      <<: [*env-common-ref, *env-proxy-ref]
       API_KEY: ${GPTACADEMIC_API_KEY}
       API_URL_REDIRECT: ${GPTACADEMIC_API_URL_REDIRECT}
       USE_PROXY: ${GPTACADEMIC_USE_PROXY}
@@ -206,7 +206,6 @@ services:
       THEME: ${GPTACADEMIC_THEME}
       DEFAULT_WORKER_NUM: ${GPTACADEMIC_DEFAULT_WORKER_NUM}
       AUTHENTICATION: ${GPTACADEMIC_AUTHENTICATION}
-      TZ: ${TZ}
     logging:
       driver: fluentd
       options:
