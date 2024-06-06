@@ -1,20 +1,43 @@
+---
 # Update Time: 2024-04-27 10:00
 version: "3.4"
 
+x-defines:
+  service-common: &service-common-ref
+    networks: [network_cluster]
+    restart: on-failure
+  deploy-common: &deploy-common-ref
+    mode: replicated
+    replicas: 1
+  placement-default: &placement-default-ref
+    placement:
+      constraints:
+        - node.labels.type == vm
+        - node.labels.ai == true
+  driver-common: &driver-common-ref
+    type: nfs
+    o: addr=${NFS_SERVER},rw,nfsvers=4
+
 services:
-  # XiaoaiGPT
+  # ------------------------------------------------------------
+  # Xiaoai GPT
+  # ------------------------------------------------------------
   xiaogpt1:
     image: yihong0618/xiaogpt
     command: --config=/config/config.json
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
-      PROXY: ${OPENCLASH_HTTP_PROXY}        
+      PROXY: ${OPENCLASH_HTTP_PROXY}
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config1:/config
-      - nfs_xiaogpt_src:/app/xiaogpt 
+      - nfs_xiaogpt_src:/app/xiaogpt
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.xiaogpt1
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - homepage.group=AI & Automation
@@ -22,25 +45,24 @@ services:
         - homepage.icon=https://www.waylon.wang:4/images/services/xiaogpt.png
         - homepage.description=XiaoGPT on Bed Room
         - homepage.ping=xiaogpt1
-        - homepage.weight=20    
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.ai == true
+        - homepage.weight=20
+      <<: [*deploy-common-ref, *placement-default-ref]
   xiaogpt2:
     image: yihong0618/xiaogpt
     command: --config=/config/config.json
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
-      PROXY: ${OPENCLASH_HTTP_PROXY}         
+      PROXY: ${OPENCLASH_HTTP_PROXY}
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config2:/config
       - nfs_xiaogpt_src:/app/xiaogpt
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.xiaogpt2
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - homepage.group=AI & Automation
@@ -48,25 +70,24 @@ services:
         - homepage.icon=https://www.waylon.wang:4/images/services/xiaogpt.png
         - homepage.description=XiaoGPT on Living Room
         - homepage.ping=xiaogpt2
-        - homepage.weight=21    
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.ai == true
+        - homepage.weight=21
+      <<: [*deploy-common-ref, *placement-default-ref]
   xiaogpt3:
     image: yihong0618/xiaogpt
     command: --config=/config/config.json
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
-      PROXY: ${OPENCLASH_HTTP_PROXY}    
+      PROXY: ${OPENCLASH_HTTP_PROXY}
       TZ: ${TZ}
     volumes:
       - nfs_xiaogpt_config3:/config
       - nfs_xiaogpt_src:/app/xiaogpt
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.xiaogpt3
+        fluentd-async-connect: "true"
     deploy:
       labels:
         - homepage.group=AI & Automation
@@ -75,18 +96,14 @@ services:
         - homepage.description=XiaoGPT on Children Room
         - homepage.ping=xiaogpt3
         - homepage.weight=22
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.ai == true                    
+      <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
   # FastGPT
+  # ------------------------------------------------------------
   fastgpt:
     image: ghcr.nju.edu.cn/labring/fastgpt:latest
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       DEFAULT_ROOT_PSW: ${FASTGPT_DEFAULT_ROOT_PSW}
@@ -103,14 +120,19 @@ services:
       TZ: ${TZ}
     # volumes:
     #   - nfs_fastgpt_config:/app/data
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.fastgpt
+        fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.fastgpt.rule=Host(`fastgpt.${DOMAIN_SWARM}`,`fastgpt.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.fastgpt.entrypoints=websecure"
-        - "traefik.http.routers.fastgpt.service=fastgpt"
-        - "traefik.http.routers.fastgpt.middlewares=auth,cors-headers@file,normal-chain@file"
-        - "traefik.http.services.fastgpt.loadbalancer.server.port=3000"
+        - traefik.enable=true
+        - traefik.http.routers.fastgpt.rule=Host(`fastgpt.${DOMAIN_SWARM}`,`fastgpt.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.fastgpt.entrypoints=websecure
+        - traefik.http.routers.fastgpt.service=fastgpt
+        - traefik.http.routers.fastgpt.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.fastgpt.loadbalancer.server.port=3000
         - homepage.group=AI & Automation
         - homepage.name=FastGPT
         - homepage.icon=https://www.waylon.wang:4/images/services/fastgpt.png
@@ -118,24 +140,15 @@ services:
         - homepage.description=基于LLM大模型的AI知识库问答平台
         - homepage.siteMonitor=http://fastgpt:3000
         - homepage.weight=1
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.ai == true
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.fastgpt
-        fluentd-async-connect: "true"  
+      <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
   # One API
+  # ------------------------------------------------------------
   oneapi:
     image: justsong/one-api:latest
     command: --log-dir /app/logs
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       # SQL_DSN: ${ONEAPI_SQL_DSN}  # 修改此行，或注释掉以使用 SQLite 作为数据库
@@ -146,18 +159,23 @@ services:
       HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
       # http_proxy: ${CLASH_HTTP_PROXY}
       # https_proxy: ${CLASH_HTTP_PROXY}
-      TZ: ${TZ}     
+      TZ: ${TZ}
     volumes:
       - nfs_oneapi_data:/data
-      - nfs_oneapi_log:/app/logs  
+      - nfs_oneapi_log:/app/logs
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.oneapi
+        fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.oneapi.rule=Host(`oneapi.${DOMAIN_SWARM}`,`oneapi.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.oneapi.entrypoints=websecure"
-        - "traefik.http.routers.oneapi.service=oneapi"
-        - "traefik.http.routers.oneapi.middlewares=auth,cors-headers@file,normal-chain@file"
-        - "traefik.http.services.oneapi.loadbalancer.server.port=3000"
+        - traefik.enable=true
+        - traefik.http.routers.oneapi.rule=Host(`oneapi.${DOMAIN_SWARM}`,`oneapi.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.oneapi.entrypoints=websecure
+        - traefik.http.routers.oneapi.service=oneapi
+        - traefik.http.routers.oneapi.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.oneapi.loadbalancer.server.port=3000
         - homepage.group=AI & Automation
         - homepage.name=OneAPI
         - homepage.icon=https://www.waylon.wang:4/images/services/oneapi.png
@@ -165,26 +183,22 @@ services:
         - homepage.description=OpenAI接口管理&分发系统
         - homepage.siteMonitor=http://oneapi:3000
         - homepage.weight=2
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.ai == true     
+      <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
   # GPT Academic
+  # ------------------------------------------------------------
   gptacademic:
     image: ghcr.nju.edu.cn/binary-husky/gpt_academic_nolocal:master
     command: >
       bash -c "python3 -u main.py"
-    networks: [network_cluster]
-    restart: on-failure
+    <<: *service-common-ref
     environment:
       # 直接使用Portainer容器内的环境变量
       API_KEY: ${GPTACADEMIC_API_KEY}
       API_URL_REDIRECT: ${GPTACADEMIC_API_URL_REDIRECT}
       USE_PROXY: ${GPTACADEMIC_USE_PROXY}
-      # proxies: { "http": "socks5h://localhost:10880", "https": "socks5h://localhost:10880", } 
+      # proxies: { "http": "socks5h://localhost:10880", "https": "socks5h://localhost:10880", }
       LLM_MODEL: ${GPTACADEMIC_LLM_MODEL}
       AVAIL_LLM_MODELS: $GPTACADEMIC_AVAIL_LLM_MODELS}
       WEB_PORT: ${GPTACADEMIC_WEB_PORT}
@@ -192,15 +206,20 @@ services:
       THEME: ${GPTACADEMIC_THEME}
       DEFAULT_WORKER_NUM: ${GPTACADEMIC_DEFAULT_WORKER_NUM}
       AUTHENTICATION: ${GPTACADEMIC_AUTHENTICATION}
-      TZ: ${TZ}     
+      TZ: ${TZ}
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.gptacademic
+        fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.gptacademic.rule=Host(`gptacademic.${DOMAIN_SWARM}`,`gptacademic.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.gptacademic.entrypoints=websecure"
-        - "traefik.http.routers.gptacademic.service=gptacademic"
-        - "traefik.http.routers.gptacademic.middlewares=auth,cors-headers@file,normal-chain@file"
-        - "traefik.http.services.gptacademic.loadbalancer.server.port=${GPTACADEMIC_WEB_PORT}"
+        - traefik.enable=true
+        - traefik.http.routers.gptacademic.rule=Host(`gptacademic.${DOMAIN_SWARM}`,`gptacademic.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.gptacademic.entrypoints=websecure
+        - traefik.http.routers.gptacademic.service=gptacademic
+        - traefik.http.routers.gptacademic.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.gptacademic.loadbalancer.server.port=${GPTACADEMIC_WEB_PORT}
         - homepage.group=AI & Automation
         - homepage.name=GPT Academic
         - homepage.icon=https://www.waylon.wang:4/images/services/academic.png
@@ -208,55 +227,47 @@ services:
         - homepage.description=GPT 学术优化
         - homepage.siteMonitor=http://gptacademic:${GPTACADEMIC_WEB_PORT}
         - homepage.weight=3
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.ai == true     
-                     
+      <<: [*deploy-common-ref, *placement-default-ref]
+
 networks:
   network_cluster:
     external: true
-
-x-common-keys-volume: &common-keys-volume
-  type: nfs
-  o: addr=${NFS_SERVER},rw,nfsvers=4
 
 volumes:
   # NFS
   nfs_xiaogpt_src:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/ai/xiaogpt/src/xiaogpt        
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/xiaogpt/src/xiaogpt
   nfs_xiaogpt_config1:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/xiaogpt/config1
   nfs_xiaogpt_config2:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/xiaogpt/config2
   nfs_xiaogpt_config3:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/ai/xiaogpt/config3    
-  nfs_fastgpt_config:  
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/xiaogpt/config3
+  nfs_fastgpt_config:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/ai/fastgpt/data  
-  nfs_oneapi_data:  
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/fastgpt/data
+  nfs_oneapi_data:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/ai/oneapi/data   
-  nfs_oneapi_log:  
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/oneapi/data
+  nfs_oneapi_log:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
+      <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/oneapi/log
+...
