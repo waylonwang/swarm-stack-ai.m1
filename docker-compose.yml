@@ -50,7 +50,7 @@ services:
       labels:
         - homepage.group=AI & Automation
         - homepage.name=XiaoGPT #1
-        - homepage.icon=https://www.waylon.wang:4/images/services/xiaogpt.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
         - homepage.description=XiaoGPT on Bed Room
         - homepage.ping=xiaogpt1
         - homepage.weight=20
@@ -74,7 +74,7 @@ services:
       labels:
         - homepage.group=AI & Automation
         - homepage.name=XiaoGPT #2
-        - homepage.icon=https://www.waylon.wang:4/images/services/xiaogpt.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
         - homepage.description=XiaoGPT on Living Room
         - homepage.ping=xiaogpt2
         - homepage.weight=21
@@ -98,7 +98,7 @@ services:
       labels:
         - homepage.group=AI & Automation
         - homepage.name=XiaoGPT #3
-        - homepage.icon=https://www.waylon.wang:4/images/services/xiaogpt.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
         - homepage.description=XiaoGPT on Children Room
         - homepage.ping=xiaogpt3
         - homepage.weight=22
@@ -140,7 +140,7 @@ services:
         - traefik.http.services.fastgpt.loadbalancer.server.port=3000
         - homepage.group=AI & Automation
         - homepage.name=FastGPT
-        - homepage.icon=https://www.waylon.wang:4/images/services/fastgpt.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/fastgpt.png
         - homepage.href=https://fastgpt.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=基于LLM大模型的AI知识库问答平台
         - homepage.siteMonitor=http://fastgpt:3000
@@ -178,7 +178,7 @@ services:
         - traefik.http.services.oneapi.loadbalancer.server.port=3000
         - homepage.group=AI & Automation
         - homepage.name=OneAPI
-        - homepage.icon=https://www.waylon.wang:4/images/services/oneapi.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/oneapi.png
         - homepage.href=https://oneapi.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=OpenAI接口管理&分发系统
         - homepage.siteMonitor=http://oneapi:3000
@@ -221,7 +221,7 @@ services:
         - traefik.http.services.gptacademic.loadbalancer.server.port=${GPTACADEMIC_WEB_PORT}
         - homepage.group=AI & Automation
         - homepage.name=GPT Academic
-        - homepage.icon=https://www.waylon.wang:4/images/services/academic.png
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/academic.png
         - homepage.href=https://gptacademic.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=GPT 学术优化
         - homepage.siteMonitor=http://gptacademic:${GPTACADEMIC_WEB_PORT}
