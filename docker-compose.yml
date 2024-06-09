@@ -33,7 +33,7 @@ services:
   # ------------------------------------------------------------
   xiaogpt1:
     <<: *service-common-ref
-    image: yihong0618/xiaogpt
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
     command: --config=/config/config.json
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
@@ -57,7 +57,7 @@ services:
       <<: [*deploy-common-ref, *placement-default-ref]
   xiaogpt2:
     <<: *service-common-ref
-    image: yihong0618/xiaogpt
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
     command: --config=/config/config.json
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
@@ -81,7 +81,7 @@ services:
       <<: [*deploy-common-ref, *placement-default-ref]
   xiaogpt3:
     <<: *service-common-ref
-    image: yihong0618/xiaogpt
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
     command: --config=/config/config.json
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
@@ -152,7 +152,7 @@ services:
   # ------------------------------------------------------------
   oneapi:
     <<: *service-common-ref
-    image: justsong/one-api:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/justsong/one-api:v0.6.7-alpha.4
     command: --log-dir /app/logs
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
