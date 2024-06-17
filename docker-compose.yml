@@ -114,7 +114,7 @@ services:
   # ------------------------------------------------------------
   fastgpt:
     <<: *service-common-ref
-    # image-ref: ghcr.nju.edu.cn/labring/fastgpt:latest
+    # image-ref: ghcr.io/labring/fastgpt:latest
     image: ghcr.nju.edu.cn/labring/fastgpt:latest
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
@@ -197,7 +197,7 @@ services:
   # ------------------------------------------------------------
   gptacademic:
     <<: *service-common-ref
-    # image-ref: ghcr.nju.edu.cn/binary-husky/gpt_academic_nolocal:master
+    # image-ref: ghcr.io/binary-husky/gpt_academic_nolocal:master
     image: ghcr.nju.edu.cn/binary-husky/gpt_academic_nolocal:master
     command: >
       bash -c "python3 -u main.py"
