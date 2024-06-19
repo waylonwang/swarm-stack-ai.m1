@@ -115,7 +115,7 @@ services:
   fastgpt:
     <<: *service-common-ref
     # image-ref: ghcr.io/labring/fastgpt:latest
-    image: ghcr.nju.edu.cn/labring/fastgpt:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/labring/fastgpt:latest
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       DEFAULT_ROOT_PSW: ${FASTGPT_DEFAULT_ROOT_PSW}
@@ -198,7 +198,7 @@ services:
   gptacademic:
     <<: *service-common-ref
     # image-ref: ghcr.io/binary-husky/gpt_academic_nolocal:master
-    image: ghcr.nju.edu.cn/binary-husky/gpt_academic_nolocal:master
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/binary-husky/gpt_academic_nolocal:master
     command: >
       bash -c "python3 -u main.py"
     environment:
