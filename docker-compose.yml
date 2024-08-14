@@ -241,8 +241,8 @@ services:
   # ------------------------------------------------------------
   ollama-webui:
     <<: *service-common-ref
-    # image-ref: ghcr.io/open-webui/open-webui:git-9682806-ollama
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/open-webui/open-webui:git-9682806-ollama
+    # image-ref: ghcr.io/open-webui/open-webui:main
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/open-webui/open-webui:main
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       OLLAMA_API_BASE_URL: ${OLLAMAWEBUI_OLLAMA_API_BASE_URL}
