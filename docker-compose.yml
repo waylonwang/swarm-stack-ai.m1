@@ -236,6 +236,42 @@ services:
         - homepage.weight=3
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
+  # Ollama WebUI
+  # ------------------------------------------------------------
+  ollama-webui:
+    <<: *service-common-ref
+    # image-ref: ghcr.io/open-webui/open-webui:git-9682806-ollama
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/open-webui/open-webui:git-9682806-ollama
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+      OLLAMA_API_BASE_URL: ${OLLAMAWEBUI_OLLAMA_API_BASE_URL}
+      WEBUI_SECRET_KEY: ${OLLAMAWEBUI_WEBUI_SECRET_KEY}
+      HF_ENDPOINT: ${OLLAMAWEBUI_HF_ENDPOINT}
+    volumes:
+      - nfs_ollama-webui_data:/app/backend/data
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.ollama
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.ollama.rule=Host(`ollama.${DOMAIN_SWARM}`,`ollama.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.ollama.entrypoints=websecure
+        - traefik.http.routers.ollama.service=ollama
+        - traefik.http.routers.ollama.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.ollama.loadbalancer.server.port=8080
+        - homepage.group=AI & Automation
+        - homepage.name=Ollama WebUI
+        - homepage.icon=ollama.png
+        - homepage.href=https://ollama.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=Ollama WebUI
+        - homepage.siteMonitor=http://ollama:${GPTACADEMIC_WEB_PORT}
+        - homepage.weight=4
+      <<: [*deploy-common-ref, *placement-default-ref]
+
 networks:
   network_cluster:
     external: true
@@ -277,4 +313,9 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/oneapi/log
+  nfs_ollama-webui_data:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/ollama-webui/data
 ...
