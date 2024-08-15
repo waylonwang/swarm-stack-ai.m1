@@ -246,6 +246,7 @@ services:
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       OLLAMA_API_BASE_URL: ${OLLAMAWEBUI_OLLAMA_API_BASE_URL}
+      COMFYUI_BASE_URL: ${OLLAMAWEBUI_COMFYUI_BASE_URL}
       WEBUI_SECRET_KEY: ${OLLAMAWEBUI_WEBUI_SECRET_KEY}
       HF_ENDPOINT: ${OLLAMAWEBUI_HF_ENDPOINT}
     volumes:
