@@ -267,11 +267,11 @@ services:
         - traefik.http.services.ollama.loadbalancer.server.port=8080
         - homepage.group=AI & Automation
         - homepage.name=Ollama WebUI
-        - homepage.icon=ollama.png
+        - homepage.icon=open-webui-light.png
         - homepage.href=https://ollama.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=Ollama WebUI
-        - homepage.siteMonitor=http://ollama-webui:${GPTACADEMIC_WEB_PORT}
-        - homepage.weight=4
+        - homepage.siteMonitor=http://ollama-webui:8080
+        - homepage.weight=7
       <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
