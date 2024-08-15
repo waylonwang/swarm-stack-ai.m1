@@ -270,7 +270,7 @@ services:
         - homepage.icon=ollama.png
         - homepage.href=https://ollama.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=Ollama WebUI
-        - homepage.siteMonitor=http://ollama:${GPTACADEMIC_WEB_PORT}
+        - homepage.siteMonitor=http://ollama-webui:${GPTACADEMIC_WEB_PORT}
         - homepage.weight=4
       <<: [*deploy-common-ref, *placement-default-ref]
 
