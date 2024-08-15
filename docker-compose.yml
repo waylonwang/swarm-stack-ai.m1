@@ -249,6 +249,7 @@ services:
       COMFYUI_BASE_URL: ${OLLAMAWEBUI_COMFYUI_BASE_URL}
       WEBUI_SECRET_KEY: ${OLLAMAWEBUI_WEBUI_SECRET_KEY}
       HF_ENDPOINT: ${OLLAMAWEBUI_HF_ENDPOINT}
+      ENABLE_IMAGE_GENERATION: "true"
     volumes:
       - nfs_ollama-webui_data:/app/backend/data
     logging:
