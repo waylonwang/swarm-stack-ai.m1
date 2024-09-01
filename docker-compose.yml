@@ -303,13 +303,13 @@ services:
         - traefik.http.routers.dify.entrypoints=websecure
         - traefik.http.routers.dify.service=dify
         - traefik.http.routers.dify.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.dify.loadbalancer.server.port=80
+        - traefik.http.services.dify.loadbalancer.server.port=3000
         - homepage.group=AI & Automation
         - homepage.name=Dify API
         - homepage.icon=dify.png
         - homepage.href=https://dify.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=AI 
-        - homepage.siteMonitor=http://dify:80
+        - homepage.siteMonitor=http://dify:3000
         - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
