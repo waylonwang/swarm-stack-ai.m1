@@ -288,6 +288,7 @@ services:
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-web:0.7.1
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
+      CONSOLE_API_URL: ${DIFY_CONSOLE_API_URL:-}
       APP_API_URL: ${DIFY_APP_API_URL:-}
       SENTRY_DSN: ${DIFY_WEB_SENTRY_DSN:-}
       NEXT_TELEMETRY_DISABLED: ${DIFY_NEXT_TELEMETRY_DISABLED:-0}
