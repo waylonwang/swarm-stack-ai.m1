@@ -235,20 +235,20 @@ services:
         tag: docker.ai.dify-api
         fluentd-async-connect: "true"
     deploy:
-      # labels:
-        # - traefik.enable=true
-        # - traefik.http.routers.difyapi.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`)
-        # - traefik.http.routers.difyapi.entrypoints=websecure
-        # - traefik.http.routers.difyapi.service=difyapi
-        # - traefik.http.routers.difyapi.middlewares=auth,cors-headers@file,normal-chain@file
-        # - traefik.http.services.difyapi.loadbalancer.server.port=80
-        # - homepage.group=AI & Automation
-        # - homepage.name=Dify API
-        # - homepage.icon=dify.png
-        # # - homepage.href=https://fastgpt.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        # - homepage.description=AI
-        # - homepage.siteMonitor=http://dify:3000
-        # - homepage.weight=10
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.difyapi.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.difyapi.entrypoints=websecure
+        - traefik.http.routers.difyapi.service=difyapi
+        - traefik.http.routers.difyapi.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.difyapi.loadbalancer.server.port=5001
+        - homepage.group=AI & Automation
+        - homepage.name=Dify API
+        - homepage.icon=dify.png
+        # - homepage.href=https://fastgpt.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=AI
+        - homepage.siteMonitor=http://difyapi:5001
+        - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
   dify-worker:
