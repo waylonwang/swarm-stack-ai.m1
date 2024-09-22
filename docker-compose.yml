@@ -236,7 +236,7 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.difyrule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && !PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
+        - traefik.http.routers.difyrule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`)
         - traefik.http.routers.dify.entrypoints=websecure
         - traefik.http.routers.dify.service=dify
         - traefik.http.services.dify.loadbalancer.server.port=80
