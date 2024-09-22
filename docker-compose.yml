@@ -239,6 +239,7 @@ services:
         - traefik.http.routers.difyrule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`)
         - traefik.http.routers.dify.entrypoints=websecure
         - traefik.http.routers.dify.service=dify
+        - traefik.http.routers.dify.middlewares=auth,normal-chain@file
         - traefik.http.services.dify.loadbalancer.server.port=80
         - homepage.group=AI & Automation
         - homepage.name=Dify API
