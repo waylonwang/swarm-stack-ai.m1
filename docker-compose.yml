@@ -239,7 +239,7 @@ services:
         - traefik.enable=true
         # 路径 /console/api
         - traefik.http.routers.dify-api-console-api.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
-        - traefik.http.routers.dify-api-console-api.entrypoints=websecure
+        - traefik.http.routers.dify-api-console-api.entrypoints=web
         - traefik.http.routers.dify-api-console-api.service=dify-api-console-api
         - traefik.http.routers.dify-api-console-api.middlewares=dify-api-chain@file
         - traefik.http.services.dify-api-console-api.loadbalancer.server.port=5001
