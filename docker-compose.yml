@@ -239,9 +239,9 @@ services:
         - traefik.enable=true
         # 路径 /console/api
         - traefik.http.routers.dify-api-console-api.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
-        - traefik.http.routers.dify-api-console-api.entrypoints=web
+        - traefik.http.routers.dify-api-console-api.entrypoints=websecure
         - traefik.http.routers.dify-api-console-api.service=dify-api-console-api
-        - traefik.http.routers.dify-api-console-api.middlewares=dify-api-chain@file
+        - traefik.http.routers.dify-api-console-api.middlewares=dify-chain@file
         - traefik.http.services.dify-api-console-api.loadbalancer.server.port=5001
         # # 路径 /api
         # - traefik.http.routers.dify-api-api.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/api`)
@@ -256,11 +256,6 @@ services:
         # - traefik.http.routers.dify-api-v1.middlewares=dify-api-chain@file
         # - traefik.http.services.dify-api-v1.loadbalancer.server.port=5001  
         # # 路径 /files
-        # - traefik.http.routers.dify-api-files.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/files`)
-        # - traefik.http.routers.dify-api-files.entrypoints=websecure
-        # - traefik.http.routers.dify-api-files.service=dify-api-files
-        # - traefik.http.routers.dify-api-files.middlewares=dify-api-chain@file
-        # - traefik.http.services.dify-api-files.loadbalancer.server.port=5001 
       <<: [*deploy-common-ref, *placement-default-ref]
 
   dify-worker:
