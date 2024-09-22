@@ -237,18 +237,30 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.difyapi.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`)
-        - traefik.http.routers.difyapi.entrypoints=websecure
-        - traefik.http.routers.difyapi.service=difyapi
-        - traefik.http.routers.difyapi.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.difyapi.loadbalancer.server.port=5001
-        - homepage.group=AI & Automation
-        - homepage.name=Dify API
-        - homepage.icon=dify.png
-        # - homepage.href=https://fastgpt.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=AI
-        - homepage.siteMonitor=http://difyapi:5001
-        - homepage.weight=10
+        # 路径 /console/api
+        - traefik.http.routers.dify-api-console-api.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/console/api`)
+        - traefik.http.routers.dify-api-console-api.entrypoints=websecure
+        - traefik.http.routers.dify-api-console-api.service=dify-api-console-api
+        - traefik.http.routers.dify-api-console-api.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.dify-api-console-api.loadbalancer.server.port=5001
+        # 路径 /api
+        - traefik.http.routers.dify-api-api.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/api`)
+        - traefik.http.routers.dify-api-api.entrypoints=websecure
+        - traefik.http.routers.dify-api-api.service=dify-api-api
+        - traefik.http.routers.dify-api-api.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.dify-api-api.loadbalancer.server.port=5001
+        # 路径 /v1
+        - traefik.http.routers.dify-api-v1.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/v1`)
+        - traefik.http.routers.dify-api-v1.entrypoints=websecure
+        - traefik.http.routers.dify-api-v1.service=dify-api-v1
+        - traefik.http.routers.dify-api-v1.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.dify-api-v1.loadbalancer.server.port=5001
+        # 路径 /files
+        - traefik.http.routers.dify-api-files.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/files`)
+        - traefik.http.routers.dify-api-files.entrypoints=websecure
+        - traefik.http.routers.dify-api-files.service=dify-api-files
+        - traefik.http.routers.dify-api-files.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.dify-api-files.loadbalancer.server.port=5001
       <<: [*deploy-common-ref, *placement-default-ref]
 
   dify-worker:
@@ -300,17 +312,17 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.dify.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`)
-        - traefik.http.routers.dify.entrypoints=websecure
-        - traefik.http.routers.dify.service=dify
-        - traefik.http.routers.dify.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.dify.loadbalancer.server.port=3000
+        - traefik.http.routers.dify-web.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.dify-web.entrypoints=websecure
+        - traefik.http.routers.dify-web.service=dify-web
+        - traefik.http.routers.dify-web.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.dify-web.loadbalancer.server.port=3000
         - homepage.group=AI & Automation
         - homepage.name=Dify API
         - homepage.icon=dify.png
         - homepage.href=https://dify.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=AI 
-        - homepage.siteMonitor=http://dify:3000
+        - homepage.siteMonitor=http://dify-web:3000
         - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
@@ -379,8 +391,8 @@ services:
       PG_URL: ${FASTGPT_PG_URL}
       AXIOS_PROXY_HOST: ${FASTGPT_AXIOS_PROXY_HOST}
       AXIOS_PROXY_PORT: ${FASTGPT_AXIOS_PROXY_PORT}
-    # volumes:
-    #   - nfs_fastgpt_config:/app/data
+    volumes:
+      - nfs_fastgpt_config:/app/data
     logging:
       driver: fluentd
       options:
