@@ -237,30 +237,45 @@ services:
     deploy:
       labels:
         - traefik.enable=true
+        - traefik.http.middlewares.dify-api-headers.headers.customrequestheaders.X-Forwarded-For=X-Real-IP
+        - traefik.http.middlewares.dify-api-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+        - traefik.http.middlewares.dify-api-headers.headers.customrequestheaders.Host={host}
         # 路径 /console/api
         - traefik.http.routers.dify-api-console-api.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/console/api`)
         - traefik.http.routers.dify-api-console-api.entrypoints=websecure
         - traefik.http.routers.dify-api-console-api.service=dify-api-console-api
-        - traefik.http.routers.dify-api-console-api.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.routers.dify-api-console-api.middlewares=auth,cors-headers@file,normal-chain@file,dify-api-headers
         - traefik.http.services.dify-api-console-api.loadbalancer.server.port=5001
+        - traefik.http.services.dify-api-console-api.loadbalancer.healthcheck.interval=1s
+        - traefik.http.services.dify-api-console-api.loadbalancer.server.readtimeout=3600
+        - traefik.http.services.dify-api-console-api.loadbalancer.server.writetimeout=3600    
         # 路径 /api
         - traefik.http.routers.dify-api-api.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/api`)
         - traefik.http.routers.dify-api-api.entrypoints=websecure
         - traefik.http.routers.dify-api-api.service=dify-api-api
-        - traefik.http.routers.dify-api-api.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.routers.dify-api-api.middlewares=auth,cors-headers@file,normal-chain@file,dify-api-headers
         - traefik.http.services.dify-api-api.loadbalancer.server.port=5001
+        - traefik.http.services.dify-api-api.loadbalancer.healthcheck.interval=1s
+        - traefik.http.services.dify-api-api.loadbalancer.server.readtimeout=3600
+        - traefik.http.services.dify-api-api.loadbalancer.server.writetimeout=3600    
         # 路径 /v1
         - traefik.http.routers.dify-api-v1.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/v1`)
         - traefik.http.routers.dify-api-v1.entrypoints=websecure
         - traefik.http.routers.dify-api-v1.service=dify-api-v1
-        - traefik.http.routers.dify-api-v1.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.routers.dify-api-v1.middlewares=auth,cors-headers@file,normal-chain@file,dify-api-headers
         - traefik.http.services.dify-api-v1.loadbalancer.server.port=5001
+        - traefik.http.services.dify-api-v1.loadbalancer.healthcheck.interval=1s
+        - traefik.http.services.dify-api-v1.loadbalancer.server.readtimeout=3600
+        - traefik.http.services.dify-api-v1.loadbalancer.server.writetimeout=3600    
         # 路径 /files
         - traefik.http.routers.dify-api-files.rule=Host(`difyapi.${DOMAIN_SWARM}`,`difyapi.${DOMAIN_EMERGENCY}`) && PathPrefix(`/files`)
         - traefik.http.routers.dify-api-files.entrypoints=websecure
         - traefik.http.routers.dify-api-files.service=dify-api-files
-        - traefik.http.routers.dify-api-files.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.routers.dify-api-files.middlewares=auth,cors-headers@file,normal-chain@file,dify-api-headers
         - traefik.http.services.dify-api-files.loadbalancer.server.port=5001
+        - traefik.http.services.dify-api-files.loadbalancer.healthcheck.interval=1s
+        - traefik.http.services.dify-api-files.loadbalancer.server.readtimeout=3600
+        - traefik.http.services.dify-api-files.loadbalancer.server.writetimeout=3600    
       <<: [*deploy-common-ref, *placement-default-ref]
 
   dify-worker:
