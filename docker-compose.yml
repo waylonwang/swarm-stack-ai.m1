@@ -220,6 +220,35 @@ services:
   # ------------------------------------------------------------
   # DIFY
   # ------------------------------------------------------------
+  dify-nginx:
+    <<: *service-common-ref
+    # image-ref: library/nginx:1.27.1-alpine
+    image: registry.cloudvalley.site:4/library/nginx:1.27.1-alpine
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+    volumes:
+      - nfs_dify_nginx:/etc/nginx
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.dify-nginx
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.difyrule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && !PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
+        - traefik.http.routers.dify.entrypoints=websecure
+        - traefik.http.routers.dify.service=dify
+        - traefik.http.services.dify.loadbalancer.server.port=80
+        - homepage.group=AI & Automation
+        - homepage.name=Dify API
+        - homepage.icon=dify.png
+        - homepage.href=https://dify.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=AI 
+        - homepage.siteMonitor=http://dify-web:3000
+        - homepage.weight=10
+      <<: [*deploy-common-ref, *placement-default-ref]
+
   dify-api:
     <<: *service-common-ref
     # image-ref: langgenius/dify-api:0.7.1
@@ -235,14 +264,14 @@ services:
         tag: docker.ai.dify-api
         fluentd-async-connect: "true"
     deploy:
-      labels:
-        - traefik.enable=true
+      # labels:
+        # - traefik.enable=true
         # 路径 /console/api
-        - traefik.http.routers.dify-api-console-api.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
-        - traefik.http.routers.dify-api-console-api.entrypoints=websecure
-        - traefik.http.routers.dify-api-console-api.service=dify-api-console-api
-        - traefik.http.routers.dify-api-console-api.middlewares=dify-chain@file
-        - traefik.http.services.dify-api-console-api.loadbalancer.server.port=5001
+        # - traefik.http.routers.dify-api-console-api.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
+        # - traefik.http.routers.dify-api-console-api.entrypoints=websecure
+        # - traefik.http.routers.dify-api-console-api.service=dify-api-console-api
+        # - traefik.http.routers.dify-api-console-api.middlewares=dify-chain@file
+        # - traefik.http.services.dify-api-console-api.loadbalancer.server.port=5001
         # # 路径 /api
         # - traefik.http.routers.dify-api-api.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && PathPrefix(`/api`)
         # - traefik.http.routers.dify-api-api.entrypoints=websecure
@@ -291,20 +320,20 @@ services:
         tag: docker.ai.dify-web
         fluentd-async-connect: "true"
     deploy:
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.dify-web.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && !PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
-        - traefik.http.routers.dify-web.entrypoints=websecure
-        - traefik.http.routers.dify-web.service=dify-web
-        - traefik.http.routers.dify-web.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.dify-web.loadbalancer.server.port=3000
-        - homepage.group=AI & Automation
-        - homepage.name=Dify API
-        - homepage.icon=dify.png
-        - homepage.href=https://dify.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=AI 
-        - homepage.siteMonitor=http://dify-web:3000
-        - homepage.weight=10
+      # labels:
+        # - traefik.enable=true
+        # - traefik.http.routers.dify-web.rule=Host(`dify.${DOMAIN_SWARM}`,`dify.${DOMAIN_EMERGENCY}`) && !PathPrefix(`/console/api`, `/api`, `/v1`, `/files`)
+        # - traefik.http.routers.dify-web.entrypoints=websecure
+        # - traefik.http.routers.dify-web.service=dify-web
+        # - traefik.http.routers.dify-web.middlewares=auth,cors-headers@file,normal-chain@file
+        # - traefik.http.services.dify-web.loadbalancer.server.port=3000
+        # - homepage.group=AI & Automation
+        # - homepage.name=Dify API
+        # - homepage.icon=dify.png
+        # - homepage.href=https://dify.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        # - homepage.description=AI 
+        # - homepage.siteMonitor=http://dify-web:3000
+        # - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
   dify-sandbox:
@@ -622,6 +651,11 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/xiaogpt/config3
+  nfs_dify_nginx:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/dify/nginx
   nfs_dify_storage:
     driver: local
     driver_opts:
