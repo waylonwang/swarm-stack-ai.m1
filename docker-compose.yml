@@ -352,7 +352,7 @@ services:
   # ------------------------------------------------------------
   flowise:
     <<: *service-common-ref
-    # image-ref: ghcr.io/labring/fastgpt:latest
+    # image-ref: flowiseai/flowise:2.1.1
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/flowiseai/flowise:2.1.1
     entrypoint: /bin/sh -c "sleep 3; flowise start"
     environment:
@@ -454,8 +454,8 @@ services:
   # ------------------------------------------------------------
   oneapi:
     <<: *service-common-ref
-    # image-ref: justsong/one-api:v0.6.7-alpha.4
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/justsong/one-api:v0.6.7-alpha.4
+    # image-ref: justsong/one-api:v0.6.8
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/justsong/one-api:v0.6.8
     command: --log-dir /app/logs
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
@@ -463,6 +463,7 @@ services:
       REDIS_CONN_STRING: ${ONEAPI_REDIS_CONN_STRING}
       SYNC_FREQUENCY: 60
       SESSION_SECRET: ${ONEAPI_SESSION_SECRET}
+      THEME: berry
     volumes:
       - nfs_oneapi_data:/data
       - nfs_oneapi_log:/app/logs
