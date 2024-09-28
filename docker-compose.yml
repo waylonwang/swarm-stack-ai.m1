@@ -411,7 +411,7 @@ services:
   fastgpt:
     <<: *service-common-ref
     # image-ref: ghcr.io/labring/fastgpt:v4.8.10-fix2
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/labring/fastgpt:v4.8.10-fix2
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/labring/fastgpt:v4.6.8
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       DEFAULT_ROOT_PSW: ${FASTGPT_DEFAULT_ROOT_PSW}
