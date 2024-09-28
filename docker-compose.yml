@@ -425,6 +425,7 @@ services:
       PG_URL: ${FASTGPT_PG_URL}
       AXIOS_PROXY_HOST: ${FASTGPT_AXIOS_PROXY_HOST}
       AXIOS_PROXY_PORT: ${FASTGPT_AXIOS_PROXY_PORT}
+      SANDBOX_URL: http://fastgpt-sandbox:3000
     volumes:
       - nfs_fastgpt_config:/app/data
     logging:
@@ -460,7 +461,7 @@ services:
         fluentd-async-connect: "true"
     deploy:
       <<: [*deploy-common-ref, *placement-default-ref]
-      
+
   # ------------------------------------------------------------
   # One API
   # ------------------------------------------------------------
