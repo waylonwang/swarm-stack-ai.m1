@@ -449,6 +449,18 @@ services:
         - homepage.weight=15
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  fastgpt-sandbox:
+    <<: *service-common-ref
+    # image-ref: ghcr.io/labring/fastgpt:v4.8.10-fix2
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/labring/fastgpt-sandbox:v4.8.10
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.fastgpt
+        fluentd-async-connect: "true"
+    deploy:
+      <<: [*deploy-common-ref, *placement-default-ref]
+      
   # ------------------------------------------------------------
   # One API
   # ------------------------------------------------------------
