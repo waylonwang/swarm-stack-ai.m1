@@ -587,81 +587,81 @@ services:
   # ------------------------------------------------------------
   # Xiaoai GPT
   # ------------------------------------------------------------
-  xiaogpt1:
-    <<: *service-common-ref
-    # image-ref: yihong0618/xiaogpt:v2.84
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
-    command: --config=/config/config.json
-    environment:
-      <<: [*env-common-ref, *env-proxy-ref]
-      PROXY: ${OPENCLASH_HTTP_PROXY}
-    volumes:
-      - nfs_xiaogpt_config1:/config
-      - nfs_xiaogpt_src:/app/xiaogpt
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.xiaogpt1
-        fluentd-async-connect: "true"
-    deploy:
-      labels:
-        - homepage.group=AI & Automation
-        - homepage.name=XiaoGPT #1
-        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
-        - homepage.description=XiaoGPT on Bed Room
-        - homepage.ping=xiaogpt1
-        - homepage.weight=50
-      <<: [*deploy-common-ref, *placement-default-ref]
-  xiaogpt2:
-    <<: *service-common-ref
-    # image-ref: yihong0618/xiaogpt:v2.84
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
-    command: --config=/config/config.json
-    environment:
-      <<: [*env-common-ref, *env-proxy-ref]
-      PROXY: ${OPENCLASH_HTTP_PROXY}
-    volumes:
-      - nfs_xiaogpt_config2:/config
-      - nfs_xiaogpt_src:/app/xiaogpt
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.xiaogpt2
-        fluentd-async-connect: "true"
-    deploy:
-      labels:
-        - homepage.group=AI & Automation
-        - homepage.name=XiaoGPT #2
-        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
-        - homepage.description=XiaoGPT on Living Room
-        - homepage.ping=xiaogpt2
-        - homepage.weight=51
-      <<: [*deploy-common-ref, *placement-default-ref]
-  xiaogpt3:
-    <<: *service-common-ref
-    # image-ref: yihong0618/xiaogpt:v2.84
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
-    command: --config=/config/config.json
-    environment:
-      <<: [*env-common-ref, *env-proxy-ref]
-      PROXY: ${OPENCLASH_HTTP_PROXY}
-    volumes:
-      - nfs_xiaogpt_config3:/config
-      - nfs_xiaogpt_src:/app/xiaogpt
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.xiaogpt3
-        fluentd-async-connect: "true"
-    deploy:
-      labels:
-        - homepage.group=AI & Automation
-        - homepage.name=XiaoGPT #3
-        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
-        - homepage.description=XiaoGPT on Children Room
-        - homepage.ping=xiaogpt3
-        - homepage.weight=52
-      <<: [*deploy-common-ref, *placement-default-ref]
+  # xiaogpt1:
+  #   <<: *service-common-ref
+  #   # image-ref: yihong0618/xiaogpt:v2.84
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
+  #   command: --config=/config/config.json
+  #   environment:
+  #     <<: [*env-common-ref, *env-proxy-ref]
+  #     PROXY: ${OPENCLASH_HTTP_PROXY}
+  #   volumes:
+  #     - nfs_xiaogpt_config1:/config
+  #     - nfs_xiaogpt_src:/app/xiaogpt
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.ai.xiaogpt1
+  #       fluentd-async-connect: "true"
+  #   deploy:
+  #     labels:
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=XiaoGPT #1
+  #       - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
+  #       - homepage.description=XiaoGPT on Bed Room
+  #       - homepage.ping=xiaogpt1
+  #       - homepage.weight=50
+  #     <<: [*deploy-common-ref, *placement-default-ref]
+  # xiaogpt2:
+  #   <<: *service-common-ref
+  #   # image-ref: yihong0618/xiaogpt:v2.84
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
+  #   command: --config=/config/config.json
+  #   environment:
+  #     <<: [*env-common-ref, *env-proxy-ref]
+  #     PROXY: ${OPENCLASH_HTTP_PROXY}
+  #   volumes:
+  #     - nfs_xiaogpt_config2:/config
+  #     - nfs_xiaogpt_src:/app/xiaogpt
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.ai.xiaogpt2
+  #       fluentd-async-connect: "true"
+  #   deploy:
+  #     labels:
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=XiaoGPT #2
+  #       - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
+  #       - homepage.description=XiaoGPT on Living Room
+  #       - homepage.ping=xiaogpt2
+  #       - homepage.weight=51
+  #     <<: [*deploy-common-ref, *placement-default-ref]
+  # xiaogpt3:
+  #   <<: *service-common-ref
+  #   # image-ref: yihong0618/xiaogpt:v2.84
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/yihong0618/xiaogpt:v2.84
+  #   command: --config=/config/config.json
+  #   environment:
+  #     <<: [*env-common-ref, *env-proxy-ref]
+  #     PROXY: ${OPENCLASH_HTTP_PROXY}
+  #   volumes:
+  #     - nfs_xiaogpt_config3:/config
+  #     - nfs_xiaogpt_src:/app/xiaogpt
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.ai.xiaogpt3
+  #       fluentd-async-connect: "true"
+  #   deploy:
+  #     labels:
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=XiaoGPT #3
+  #       - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/xiaogpt.png
+  #       - homepage.description=XiaoGPT on Children Room
+  #       - homepage.ping=xiaogpt3
+  #       - homepage.weight=52
+  #     <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
   network_cluster:
