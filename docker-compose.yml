@@ -477,6 +477,7 @@ services:
       SYNC_FREQUENCY: 60
       SESSION_SECRET: ${ONEAPI_SESSION_SECRET}
       THEME: berry
+      DEBUG: true
     volumes:
       - nfs_oneapi_data:/data
       - nfs_oneapi_log:/app/logs
