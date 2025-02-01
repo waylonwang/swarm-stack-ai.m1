@@ -468,7 +468,7 @@ services:
   oneapi:
     <<: *service-common-ref
     # image-ref: justsong/one-api:v0.6.8
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/justsong/one-api:v0.6.8
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/justsong/one-api:v0.6.11-alpha.7
     command: --log-dir /app/logs
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
