@@ -252,8 +252,8 @@ services:
 
   dify-api:
     <<: *service-common-ref
-    # image-ref: langgenius/dify-api:0.7.1
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-api:0.7.1
+    # image-ref: langgenius/dify-api:0.15.2
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-api:0.15.2
     environment:
       <<: [*env-common-ref, *env-proxy-ref, *env-dify-shared-api-worker-ref]
       MODE: api
@@ -269,8 +269,8 @@ services:
 
   dify-worker:
     <<: *service-common-ref
-    # image-ref: langgenius/dify-api:0.7.1
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-api:0.7.1
+    # image-ref: langgenius/dify-api:0.15.2
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-api:0.15.2
     environment:
       <<: [*env-common-ref, *env-proxy-ref, *env-dify-shared-api-worker-ref]
       MODE: worker
@@ -286,8 +286,8 @@ services:
 
   dify-web:
     <<: *service-common-ref
-    # image-ref: langgenius/dify-web:0.7.1
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-web:0.7.1
+    # image-ref: langgenius/dify-web:0.15.2
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-web:0.15.2
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       CONSOLE_API_URL: ${DIFY_CONSOLE_API_URL:-}
@@ -304,8 +304,8 @@ services:
 
   dify-sandbox:
     <<: *service-common-ref
-    # image-ref: langgenius/dify-sandbox:0.2.6
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-sandbox:0.2.6
+    # image-ref: langgenius/dify-sandbox:0.2.10
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/langgenius/dify-sandbox:0.2.10
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       API_KEY: ${DIFY_SANDBOX_API_KEY:-dify-sandbox}
