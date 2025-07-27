@@ -347,6 +347,149 @@ services:
   #       - homepage.weight=52
   #     <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
+  # GPT Load
+  # ------------------------------------------------------------
+  gpt-load:
+    <<: *service-common-ref
+    # image-ref: ghcr.io/tbphp/gpt-load:latest
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/tbphp/gpt-load:latest
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+      PORT: ${GPT_LOAD_PORT:-3001}
+      HOST: ${GPT_LOAD_HOST:-0.0.0.0}
+      # SERVER_READ_TIMEOUT: ${GPT_LOAD_SERVER_READ_TIMEOUT:-60}
+      # SERVER_WRITE_TIMEOUT: ${GPT_LOAD_SERVER_WRITE_TIMEOUT:-600}
+      # SERVER_IDLE_TIMEOUT: ${GPT_LOAD_SERVER_IDLE_TIMEOUT:-120}
+      # SERVER_GRACEFUL_SHUTDOWN_TIMEOUT: ${GPT_LOAD_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT:-10}
+      # IS_SLAVE: ${GPT_LOAD_IS_SLAVE:-false}
+      AUTH_KEY: ${GPT_LOAD_AUTH_KEY}
+      # DATABASE_DSN: ${GPT_LOAD_DATABASE_DSN}
+      # REDIS_DSN: ${GPT_LOAD_REDIS_DSN}
+      # MAX_CONCURRENT_REQUESTS: ${GPT_LOAD_MAX_CONCURRENT_REQUESTS:-100}
+      ENABLE_CORS: ${GPT_LOAD_ENABLE_CORS:-true}
+      ALLOWED_ORIGINS: ${GPT_LOAD_ALLOWED_ORIGINS:-*}
+      ALLOWED_METHODS: ${GPT_LOAD_ALLOWED_METHODS:-GET,POST,PUT,DELETE,OPTIONS}
+      ALLOWED_HEADERS: ${GPT_LOAD_ALLOWED_HEADERS:-*}
+      ALLOW_CREDENTIALS: ${GPT_LOAD_ALLOW_CREDENTIALS:-false}
+      LOG_LEVEL: ${GPT_LOAD_LOG_LEVEL:-info}
+      LOG_FORMAT: ${GPT_LOAD_LOG_FORMAT:-text}
+      LOG_ENABLE_FILE: ${GPT_LOAD_LOG_ENABLE_FILE:-true}
+      LOG_FILE_PATH: ${GPT_LOAD_LOG_FILE_PATH:-./data/logs/app.log}
+    volumes:
+      - nfs_gpt-load_data:/app/data
+    stop_grace_period: ${GPT_LOAD_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT:-10}s
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${GPT_LOAD_PORT:-3001}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.gpt-load
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.gpt-load.rule=Host(`gptload.${DOMAIN_SWARM}`,`gptload.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.gpt-load.entrypoints=websecure
+        - traefik.http.routers.gpt-load.service=gpt-load
+        - traefik.http.routers.gpt-load.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.gpt-load.loadbalancer.server.port=${GPT_LOAD_PORT:-3001}
+        - homepage.group=AI & Automation
+        - homepage.name=GPT Load
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/gpt-load.png
+        - homepage.href=https://gptload.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=GPT负载均衡与限流管理系统
+        - homepage.siteMonitor=http://gpt-load:${GPT_LOAD_PORT:-3001}
+        - homepage.weight=32
+      <<: [*deploy-common-ref, *placement-default-ref]
+
+  # ------------------------------------------------------------
+  # New API - OpenAI API 兼容接口服务
+  # ------------------------------------------------------------
+  new-api:
+    <<: *service-common-ref
+    # image-ref: calciumion/new-api:v0.8.8.0-alpha.8
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/calciumion/new-api:v0.8.8.0-alpha.8
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+      # 基础配置
+      PORT: ${NEW_API_PORT:-3000}
+      FRONTEND_BASE_URL: https://newapi.${DOMAIN_SWARM}:${EXTERNAL_PORT}
+      
+      # 调试配置
+      ENABLE_PPROF: ${NEW_API_ENABLE_PPROF:-true}
+      DEBUG: ${NEW_API_DEBUG:-true}
+      
+      # 数据库配置
+      # SQL_DSN: ${NEW_API_SQL_DSN}
+      # LOG_SQL_DSN: ${NEW_API_LOG_SQL_DSN:-}
+      SQLITE_PATH: ${NEW_API_SQLITE_PATH:-/data/new-api.db}
+      SQL_MAX_IDLE_CONNS: ${NEW_API_SQL_MAX_IDLE_CONNS:-100}
+      SQL_MAX_OPEN_CONNS: ${NEW_API_SQL_MAX_OPEN_CONNS:-1000}
+      SQL_MAX_LIFETIME: ${NEW_API_SQL_MAX_LIFETIME:-60}
+      
+      # 缓存配置
+      # REDIS_CONN_STRING: ${NEW_API_REDIS_CONN_STRING:-}
+      # SYNC_FREQUENCY: ${NEW_API_SYNC_FREQUENCY:-60}
+      # MEMORY_CACHE_ENABLED: ${NEW_API_MEMORY_CACHE_ENABLED:-true}
+      # CHANNEL_UPDATE_FREQUENCY: ${NEW_API_CHANNEL_UPDATE_FREQUENCY:-30}
+      # BATCH_UPDATE_ENABLED: ${NEW_API_BATCH_UPDATE_ENABLED:-true}
+      # BATCH_UPDATE_INTERVAL: ${NEW_API_BATCH_UPDATE_INTERVAL:-5}
+      
+      # 任务配置
+      UPDATE_TASK: ${NEW_API_UPDATE_TASK:-true}
+      
+      # 超时设置
+      RELAY_TIMEOUT: ${NEW_API_RELAY_TIMEOUT:-0}
+      STREAMING_TIMEOUT: ${NEW_API_STREAMING_TIMEOUT:-120}
+      
+      # 其他配置
+      GEMINI_VISION_MAX_IMAGE_NUM: ${NEW_API_GEMINI_VISION_MAX_IMAGE_NUM:-16}
+      SESSION_SECRET: ${NEW_API_SESSION_SECRET}
+      CHANNEL_TEST_FREQUENCY: ${NEW_API_CHANNEL_TEST_FREQUENCY:-10}
+      GENERATE_DEFAULT_TOKEN: ${NEW_API_GENERATE_DEFAULT_TOKEN:-false}
+      COHERE_SAFETY_SETTING: ${NEW_API_COHERE_SAFETY_SETTING:-NONE}
+      GET_MEDIA_TOKEN: ${NEW_API_GET_MEDIA_TOKEN:-true}
+      GET_MEDIA_TOKEN_NOT_STREAM: ${NEW_API_GET_MEDIA_TOKEN_NOT_STREAM:-true}
+      DIFY_DEBUG: ${NEW_API_DIFY_DEBUG:-true}
+      NODE_TYPE: ${NEW_API_NODE_TYPE:-master}
+    volumes:
+      - nfs_new_api_data:/data
+      - nfs_new_api_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${NEW_API_PORT:-3000}/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.new-api
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        # Traefik标签
+        - traefik.enable=true
+        - traefik.http.routers.new-api.rule=Host(`newapi.${DOMAIN_SWARM}`,`newapi.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.new-api.entrypoints=websecure
+        - traefik.http.routers.new-api.service=new-api
+        - traefik.http.routers.new-api.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.new-api.loadbalancer.server.port=${NEW_API_PORT:-3000}
+        # Homepage标签
+        - homepage.group=AI & Automation
+        - homepage.name=New API
+        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/openai.png
+        - homepage.href=https://newapi.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=OpenAI API 兼容接口服务
+        - homepage.siteMonitor=http://new-api:${NEW_API_PORT:-3000}
+        - homepage.weight=33
+      <<: [*deploy-common-ref, *placement-default-ref]
+
 networks:
   network_cluster:
     external: true
@@ -398,4 +541,19 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/ollama-webui/data
+  nfs_gpt-load_data:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/gpt-load/data
+  nfs_new_api_data:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/new-api/data
+  nfs_new_api_logs:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/ai/new-api/logs
 ...
