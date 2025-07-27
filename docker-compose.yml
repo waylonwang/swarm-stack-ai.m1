@@ -367,11 +367,11 @@ services:
       # DATABASE_DSN: ${GPT_LOAD_DATABASE_DSN}
       # REDIS_DSN: ${GPT_LOAD_REDIS_DSN}
       MAX_CONCURRENT_REQUESTS: ${GPT_LOAD_MAX_CONCURRENT_REQUESTS:-100}
-      ENABLE_CORS: ${GPT_LOAD_ENABLE_CORS:-true}
-      ALLOWED_ORIGINS: ${GPT_LOAD_ALLOWED_ORIGINS:-*}
-      ALLOWED_METHODS: ${GPT_LOAD_ALLOWED_METHODS:-GET,POST,PUT,DELETE,OPTIONS}
-      ALLOWED_HEADERS: ${GPT_LOAD_ALLOWED_HEADERS:-*}
-      ALLOW_CREDENTIALS: ${GPT_LOAD_ALLOW_CREDENTIALS:-false}
+      # ENABLE_CORS: ${GPT_LOAD_ENABLE_CORS:-true}
+      # ALLOWED_ORIGINS: ${GPT_LOAD_ALLOWED_ORIGINS:-*}
+      # ALLOWED_METHODS: ${GPT_LOAD_ALLOWED_METHODS:-GET,POST,PUT,DELETE,OPTIONS}
+      # ALLOWED_HEADERS: ${GPT_LOAD_ALLOWED_HEADERS:-*}
+      # ALLOW_CREDENTIALS: ${GPT_LOAD_ALLOW_CREDENTIALS:-false}
       LOG_LEVEL: ${GPT_LOAD_LOG_LEVEL:-info}
       LOG_FORMAT: ${GPT_LOAD_LOG_FORMAT:-text}
       LOG_ENABLE_FILE: ${GPT_LOAD_LOG_ENABLE_FILE:-true}
@@ -460,12 +460,12 @@ services:
     volumes:
       - nfs_new_api_data:/data
       - nfs_new_api_logs:/app/logs
-    # healthcheck:
-    #   test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${NEW_API_PORT:-3000}/api/status"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 40s
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${NEW_API_PORT:-3000}/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     logging:
       driver: fluentd
       options:
