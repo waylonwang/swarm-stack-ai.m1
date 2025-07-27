@@ -376,8 +376,8 @@ services:
       # LOG_FORMAT: ${GPT_LOAD_LOG_FORMAT:-text}
       # LOG_ENABLE_FILE: ${GPT_LOAD_LOG_ENABLE_FILE:-true}
       # LOG_FILE_PATH: ${GPT_LOAD_LOG_FILE_PATH:-./data/logs/app.log}
-    # volumes:
-      # - nfs_gpt-load_data:/app/data
+    volumes:
+      - nfs_gpt-load_data:/app/data
     # stop_grace_period: ${GPT_LOAD_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT:-10}s
     # healthcheck:
     #   test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${GPT_LOAD_PORT:-3001}/health"]
