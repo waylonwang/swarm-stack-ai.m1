@@ -378,13 +378,13 @@ services:
       LOG_FILE_PATH: ${GPT_LOAD_LOG_FILE_PATH:-./data/logs/app.log}
     volumes:
       - nfs_gpt-load_data:/app/data
-    stop_grace_period: ${GPT_LOAD_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT:-10}s
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${GPT_LOAD_PORT:-3001}/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # stop_grace_period: ${GPT_LOAD_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT:-10}s
+    # healthcheck:
+    #   test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${GPT_LOAD_PORT:-3001}/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
     logging:
       driver: fluentd
       options:
@@ -460,12 +460,12 @@ services:
     volumes:
       - nfs_new_api_data:/data
       - nfs_new_api_logs:/app/logs
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${NEW_API_PORT:-3000}/api/status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # healthcheck:
+    #   test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O", "/dev/null", "http://localhost:${NEW_API_PORT:-3000}/api/status"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
     logging:
       driver: fluentd
       options:
