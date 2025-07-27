@@ -33,60 +33,60 @@ services:
   # ------------------------------------------------------------
   # Flowise
   # ------------------------------------------------------------
-  flowise:
-    <<: *service-common-ref
-    # image-ref: flowiseai/flowise:2.1.1
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/flowiseai/flowise:2.1.1
-    entrypoint: /bin/sh -c "sleep 3; flowise start"
-    environment:
-      <<: [*env-common-ref, *env-proxy-ref]
-      PORT: ${FLOWISE_PORT}
-      CORS_ORIGINS: ${FLOWISE_CORS_ORIGINS}
-      IFRAME_ORIGINS: ${FLOWISE_IFRAME_ORIGINS}
-      FLOWISE_USERNAME: ${FLOWISE_FLOWISE_USERNAME}
-      FLOWISE_PASSWORD: ${FLOWISE_FLOWISE_PASSWORD}
-      FLOWISE_FILE_SIZE_LIMIT: ${FLOWISE_FLOWISE_FILE_SIZE_LIMIT}
-      DEBUG: ${FLOWISE_DEBUG}
-      DATABASE_PATH: ${FLOWISE_DATABASE_PATH}
-      DATABASE_TYPE: ${FLOWISE_DATABASE_TYPE}
-      DATABASE_PORT: ${FLOWISE_DATABASE_PORT}
-      DATABASE_HOST: ${FLOWISE_DATABASE_HOST}
-      DATABASE_NAME: ${FLOWISE_DATABASE_NAME}
-      DATABASE_USER: ${FLOWISE_DATABASE_USER}
-      DATABASE_PASSWORD: ${FLOWISE_DATABASE_PASSWORD}
-      DATABASE_SSL: ${FLOWISE_DATABASE_SSL}
-      DATABASE_SSL_KEY_BASE64: ${FLOWISE_DATABASE_SSL_KEY_BASE64}
-      APIKEY_PATH: ${FLOWISE_APIKEY_PATH}
-      SECRETKEY_PATH: ${FLOWISE_SECRETKEY_PATH}
-      FLOWISE_SECRETKEY_OVERWRITE: ${FLOWISE_FLOWISE_SECRETKEY_OVERWRITE}
-      LOG_LEVEL: ${FLOWISE_LOG_LEVEL}
-      LOG_PATH: ${FLOWISE_LOG_PATH}
-      BLOB_STORAGE_PATH: ${FLOWISE_BLOB_STORAGE_PATH}
-      DISABLE_FLOWISE_TELEMETRY: ${FLOWISE_DISABLE_FLOWISE_TELEMETRY}
-      MODEL_LIST_CONFIG_JSON: ${FLOWISE_MODEL_LIST_CONFIG_JSON}
-    volumes:
-      - nfs_flowise_data:/root/.flowise
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.flowise
-        fluentd-async-connect: "true"
-    deploy:
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.flowise.rule=Host(`flowise.${DOMAIN_SWARM}`,`flowise.${DOMAIN_EMERGENCY}`)
-        - traefik.http.routers.flowise.entrypoints=websecure
-        - traefik.http.routers.flowise.service=flowise
-        - traefik.http.routers.flowise.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.flowise.loadbalancer.server.port=${FLOWISE_PORT}
-        - homepage.group=AI & Automation
-        - homepage.name=Flowise
-        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/flowise.png
-        - homepage.href=https://flowise.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=AI工作流
-        - homepage.siteMonitor=http://flowise:${FLOWISE_PORT}
-        - homepage.weight=14
-      <<: [*deploy-common-ref, *placement-default-ref]
+  # flowise:
+  #   <<: *service-common-ref
+  #   # image-ref: flowiseai/flowise:2.1.1
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/flowiseai/flowise:2.1.1
+  #   entrypoint: /bin/sh -c "sleep 3; flowise start"
+  #   environment:
+  #     <<: [*env-common-ref, *env-proxy-ref]
+  #     PORT: ${FLOWISE_PORT}
+  #     CORS_ORIGINS: ${FLOWISE_CORS_ORIGINS}
+  #     IFRAME_ORIGINS: ${FLOWISE_IFRAME_ORIGINS}
+  #     FLOWISE_USERNAME: ${FLOWISE_FLOWISE_USERNAME}
+  #     FLOWISE_PASSWORD: ${FLOWISE_FLOWISE_PASSWORD}
+  #     FLOWISE_FILE_SIZE_LIMIT: ${FLOWISE_FLOWISE_FILE_SIZE_LIMIT}
+  #     DEBUG: ${FLOWISE_DEBUG}
+  #     DATABASE_PATH: ${FLOWISE_DATABASE_PATH}
+  #     DATABASE_TYPE: ${FLOWISE_DATABASE_TYPE}
+  #     DATABASE_PORT: ${FLOWISE_DATABASE_PORT}
+  #     DATABASE_HOST: ${FLOWISE_DATABASE_HOST}
+  #     DATABASE_NAME: ${FLOWISE_DATABASE_NAME}
+  #     DATABASE_USER: ${FLOWISE_DATABASE_USER}
+  #     DATABASE_PASSWORD: ${FLOWISE_DATABASE_PASSWORD}
+  #     DATABASE_SSL: ${FLOWISE_DATABASE_SSL}
+  #     DATABASE_SSL_KEY_BASE64: ${FLOWISE_DATABASE_SSL_KEY_BASE64}
+  #     APIKEY_PATH: ${FLOWISE_APIKEY_PATH}
+  #     SECRETKEY_PATH: ${FLOWISE_SECRETKEY_PATH}
+  #     FLOWISE_SECRETKEY_OVERWRITE: ${FLOWISE_FLOWISE_SECRETKEY_OVERWRITE}
+  #     LOG_LEVEL: ${FLOWISE_LOG_LEVEL}
+  #     LOG_PATH: ${FLOWISE_LOG_PATH}
+  #     BLOB_STORAGE_PATH: ${FLOWISE_BLOB_STORAGE_PATH}
+  #     DISABLE_FLOWISE_TELEMETRY: ${FLOWISE_DISABLE_FLOWISE_TELEMETRY}
+  #     MODEL_LIST_CONFIG_JSON: ${FLOWISE_MODEL_LIST_CONFIG_JSON}
+  #   volumes:
+  #     - nfs_flowise_data:/root/.flowise
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.ai.flowise
+  #       fluentd-async-connect: "true"
+  #   deploy:
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.http.routers.flowise.rule=Host(`flowise.${DOMAIN_SWARM}`,`flowise.${DOMAIN_EMERGENCY}`)
+  #       - traefik.http.routers.flowise.entrypoints=websecure
+  #       - traefik.http.routers.flowise.service=flowise
+  #       - traefik.http.routers.flowise.middlewares=auth,cors-headers@file,normal-chain@file
+  #       - traefik.http.services.flowise.loadbalancer.server.port=${FLOWISE_PORT}
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=Flowise
+  #       - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/flowise.png
+  #       - homepage.href=https://flowise.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+  #       - homepage.description=AI工作流
+  #       - homepage.siteMonitor=http://flowise:${FLOWISE_PORT}
+  #       - homepage.weight=14
+  #     <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
   # FastGPT
@@ -189,46 +189,46 @@ services:
   # ------------------------------------------------------------
   # GPT Academic
   # ------------------------------------------------------------
-  gptacademic:
-    <<: *service-common-ref
-    # image-ref: ghcr.io/binary-husky/gpt_academic_nolocal:master
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/binary-husky/gpt_academic_nolocal:master
-    command: >
-      bash -c "python3 -u main.py"
-    environment:
-      <<: [*env-common-ref, *env-proxy-ref]
-      API_KEY: ${GPTACADEMIC_API_KEY}
-      API_URL_REDIRECT: ${GPTACADEMIC_API_URL_REDIRECT}
-      USE_PROXY: ${GPTACADEMIC_USE_PROXY}
-      # proxies: { "http": "socks5h://localhost:10880", "https": "socks5h://localhost:10880", }
-      LLM_MODEL: ${GPTACADEMIC_LLM_MODEL}
-      AVAIL_LLM_MODELS: $GPTACADEMIC_AVAIL_LLM_MODELS}
-      WEB_PORT: ${GPTACADEMIC_WEB_PORT}
-      ADD_WAIFU: ${GPTACADEMIC_ADD_WAIFU}
-      THEME: ${GPTACADEMIC_THEME}
-      DEFAULT_WORKER_NUM: ${GPTACADEMIC_DEFAULT_WORKER_NUM}
-      AUTHENTICATION: ${GPTACADEMIC_AUTHENTICATION}
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.gptacademic
-        fluentd-async-connect: "true"
-    deploy:
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.gptacademic.rule=Host(`gptacademic.${DOMAIN_SWARM}`,`gptacademic.${DOMAIN_EMERGENCY}`)
-        - traefik.http.routers.gptacademic.entrypoints=websecure
-        - traefik.http.routers.gptacademic.service=gptacademic
-        - traefik.http.routers.gptacademic.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.gptacademic.loadbalancer.server.port=${GPTACADEMIC_WEB_PORT}
-        - homepage.group=AI & Automation
-        - homepage.name=GPT Academic
-        - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/academic.png
-        - homepage.href=https://gptacademic.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=GPT 学术优化
-        - homepage.siteMonitor=http://gptacademic:${GPTACADEMIC_WEB_PORT}
-        - homepage.weight=21
-      <<: [*deploy-common-ref, *placement-default-ref]
+  # gptacademic:
+  #   <<: *service-common-ref
+  #   # image-ref: ghcr.io/binary-husky/gpt_academic_nolocal:master
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/binary-husky/gpt_academic_nolocal:master
+  #   command: >
+  #     bash -c "python3 -u main.py"
+  #   environment:
+  #     <<: [*env-common-ref, *env-proxy-ref]
+  #     API_KEY: ${GPTACADEMIC_API_KEY}
+  #     API_URL_REDIRECT: ${GPTACADEMIC_API_URL_REDIRECT}
+  #     USE_PROXY: ${GPTACADEMIC_USE_PROXY}
+  #     # proxies: { "http": "socks5h://localhost:10880", "https": "socks5h://localhost:10880", }
+  #     LLM_MODEL: ${GPTACADEMIC_LLM_MODEL}
+  #     AVAIL_LLM_MODELS: $GPTACADEMIC_AVAIL_LLM_MODELS}
+  #     WEB_PORT: ${GPTACADEMIC_WEB_PORT}
+  #     ADD_WAIFU: ${GPTACADEMIC_ADD_WAIFU}
+  #     THEME: ${GPTACADEMIC_THEME}
+  #     DEFAULT_WORKER_NUM: ${GPTACADEMIC_DEFAULT_WORKER_NUM}
+  #     AUTHENTICATION: ${GPTACADEMIC_AUTHENTICATION}
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.ai.gptacademic
+  #       fluentd-async-connect: "true"
+  #   deploy:
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.http.routers.gptacademic.rule=Host(`gptacademic.${DOMAIN_SWARM}`,`gptacademic.${DOMAIN_EMERGENCY}`)
+  #       - traefik.http.routers.gptacademic.entrypoints=websecure
+  #       - traefik.http.routers.gptacademic.service=gptacademic
+  #       - traefik.http.routers.gptacademic.middlewares=auth,cors-headers@file,normal-chain@file
+  #       - traefik.http.services.gptacademic.loadbalancer.server.port=${GPTACADEMIC_WEB_PORT}
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=GPT Academic
+  #       - homepage.icon=https://www.${DOMAIN_NAS}:${EXTERNAL_PORT}/images/services/academic.png
+  #       - homepage.href=https://gptacademic.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+  #       - homepage.description=GPT 学术优化
+  #       - homepage.siteMonitor=http://gptacademic:${GPTACADEMIC_WEB_PORT}
+  #       - homepage.weight=21
+  #     <<: [*deploy-common-ref, *placement-default-ref]
 
   # ------------------------------------------------------------
   # Ollama WebUI
