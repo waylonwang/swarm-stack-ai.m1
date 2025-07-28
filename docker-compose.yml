@@ -352,8 +352,8 @@ services:
   # ------------------------------------------------------------
   gpt-load:
     <<: *service-common-ref
-    # image-ref: ghcr.io/tbphp/gpt-load:latest
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/tbphp/gpt-load:latest
+    # image-ref: ghcr.io/tbphp/gpt-load:v1.0.17
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/tbphp/gpt-load:v1.0.17
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       # PORT: ${GPT_LOAD_PORT:-3001}
