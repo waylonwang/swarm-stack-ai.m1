@@ -135,7 +135,7 @@ services:
 
   fastgpt-sandbox:
     <<: *service-common-ref
-    # image-ref: ghcr.io/labring/fastgpt:v4.8.10-fix2
+    # image-ref: ghcr.io/labring/fastgpt:v4.8.10
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/labring/fastgpt-sandbox:v4.8.10
     logging:
       driver: fluentd
@@ -150,7 +150,7 @@ services:
   # ------------------------------------------------------------
   oneapi:
     <<: *service-common-ref
-    # image-ref: justsong/one-api:v0.6.8
+    # image-ref: justsong/one-api:v0.6.11-alpha.7
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/justsong/one-api:v0.6.11-alpha.7
     command: --log-dir /app/logs
     environment:
@@ -490,6 +490,77 @@ services:
         - homepage.weight=33
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
+  # Clove - Claude API Proxy Service
+  # ------------------------------------------------------------
+  clove:
+    <<: *service-common-ref
+    # image-ref: ghcr.io/clove-ai/clove:latest
+    image:
+  registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/clove/clove:latest
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+      # Server configuration
+      HOST: "0.0.0.0"
+      PORT: ${CLOVE_PORT:-5201}
+
+      # Data storage
+      DATA_FOLDER: /data
+
+      # API Keys
+      API_KEYS: ${CLOVE_API_KEYS}
+      ADMIN_API_KEYS: ${CLOVE_ADMIN_API_KEYS}
+
+      # Claude cookies
+      COOKIES: ${CLOVE_COOKIES}
+
+      # Claude URLs
+      CLAUDE_AI_URL: ${CLOVE_CLAUDE_AI_URL:-https://claude.ai}
+      CLAUDE_API_BASEURL:
+  ${CLOVE_CLAUDE_API_BASEURL:-https://api.anthropic.com}
+
+      # Logging
+      LOG_LEVEL: ${CLOVE_LOG_LEVEL:-INFO}
+      LOG_TO_FILE: ${CLOVE_LOG_TO_FILE:-true}
+      LOG_FILE_PATH: /data/logs/app.log
+    volumes:
+      - nfs_clove_data:/data
+    # healthcheck:
+    #   test: ["CMD", "wget", "-q", "--spider", "-T", "10", "-O",
+    # "/dev/null", "http://localhost:${CLOVE_PORT:-5201}/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.ai.clove
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        # Traefik标签
+        - traefik.enable=true
+        - traefik.http.routers.clove.rule=Host(`clove.${DOMAIN_
+  SWARM}`,`clove.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.clove.entrypoints=websecure
+        - traefik.http.routers.clove.service=clove
+        - traefik.http.routers.clove.middlewares=auth,cors-head
+  ers@file,normal-chain@file
+        - traefik.http.services.clove.loadbalancer.server.port=
+  ${CLOVE_PORT:-5201}
+        # Homepage标签
+        - homepage.group=AI & Automation
+        - homepage.name=Clove
+        - homepage.icon=https://raw.githubusercontent.com/walkx
+  code/dashboard-icons/main/svg/claude.svg
+        -
+  homepage.href=https://clove.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=Claude API Proxy Service
+        - homepage.siteMonitor=http://clove:${CLOVE_PORT:-5201}
+        - homepage.weight=10
+      <<: [*deploy-common-ref, *placement-ai-m1-ref]
+
 networks:
   network_cluster:
     external: true
@@ -556,4 +627,10 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/ai/new-api/logs
+  volumes:
+    nfs_clove_data:
+      driver: local
+      driver_opts:
+        <<: *driver-common-ref
+        device: :${NFS_DEVICE}/ai/clove/data      
 ...
