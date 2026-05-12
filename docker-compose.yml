@@ -111,11 +111,11 @@ services:
       SANDBOX_URL: http://fastgpt-sandbox:3000
     volumes:
       - nfs_fastgpt_config:/app/data
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.fastgpt
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.fastgpt
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -137,11 +137,11 @@ services:
     <<: *service-common-ref
     # image-ref: ghcr.io/labring/fastgpt:v4.8.10
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/labring/fastgpt-sandbox:v4.8.10
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.fastgpt
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.fastgpt
+    #     fluentd-async-connect: "true"
     deploy:
       <<: [*deploy-common-ref, *placement-default-ref]
 
@@ -164,11 +164,11 @@ services:
     volumes:
       - nfs_oneapi_data:/data
       - nfs_oneapi_log:/app/logs
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.oneapi
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.oneapi
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -246,11 +246,11 @@ services:
       ENABLE_IMAGE_GENERATION: "true"
     volumes:
       - nfs_ollama-webui_data:/app/backend/data
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.ollama
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.ollama
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -385,11 +385,11 @@ services:
     #   timeout: 10s
     #   retries: 3
     #   start_period: 40s
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.gpt-load
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.gpt-load
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         - traefik.enable=true
@@ -466,11 +466,11 @@ services:
     #   timeout: 10s
     #   retries: 3
     #   start_period: 40s
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.new-api
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.new-api
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         # Traefik标签
@@ -532,11 +532,11 @@ services:
     #   timeout: 10s
     #   retries: 3
     #   start_period: 40s
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.ai.clove
-        fluentd-async-connect: "true"
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     tag: docker.ai.clove
+    #     fluentd-async-connect: "true"
     deploy:
       labels:
         # Traefik标签
