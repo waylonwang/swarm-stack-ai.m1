@@ -516,8 +516,7 @@ services:
 
       # Claude URLs
       CLAUDE_AI_URL: ${CLOVE_CLAUDE_AI_URL:-https://claude.ai}
-      CLAUDE_API_BASEURL:
-  ${CLOVE_CLAUDE_API_BASEURL:-https://api.anthropic.com}
+      CLAUDE_API_BASEURL: ${CLOVE_CLAUDE_API_BASEURL:-https://api.anthropic.com}
 
       # Logging
       LOG_LEVEL: ${CLOVE_LOG_LEVEL:-INFO}
