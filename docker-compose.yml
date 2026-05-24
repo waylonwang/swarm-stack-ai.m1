@@ -497,7 +497,7 @@ services:
     <<: *service-common-ref
     # image-ref: ghcr.io/clove-ai/clove:latest
     image:
-  registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/clove/clove:latest
+      registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/clove/clove:latest
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       # Server configuration
