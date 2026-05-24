@@ -556,11 +556,5 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/ai/new-api/logs
-  volumes:
-    nfs_clove_data:
-      driver: local
-      driver_opts:
-        <<: *driver-common-ref
-        device: :${NFS_DEVICE}/ai/clove/data      
+      device: :${NFS_DEVICE}/ai/new-api/logs   
 ...
